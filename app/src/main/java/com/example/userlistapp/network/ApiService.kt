@@ -1,9 +1,10 @@
 package com.example.userlistapp.network
 
-import retrofit2.http.GET
 import com.example.userlistapp.model.User
+import retrofit2.Response
+import retrofit2.http.GET
 
 interface ApiService {
     @GET("users")
-    suspend fun getUsers(): List<User>
+    suspend fun getUsers(): Response<List<User>>
 }
