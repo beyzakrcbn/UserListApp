@@ -8,4 +8,5 @@ data class Company(
     val name: String,
     val catchPhrase: String,
     val bs: String
+
 ) : Parcelable  //Hızlı ve optimize edilmiş veri taşımayı sağlar.
