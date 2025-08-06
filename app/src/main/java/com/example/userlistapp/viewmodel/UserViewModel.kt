@@ -47,6 +47,18 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    // UserViewModel.kt içinde ek fonksiyon
+    fun retryFetch() {
+        fetchUsers()
+    }
+
+    // Network durumu kontrol etmek için
+    private fun isNetworkError(throwable: Throwable): Boolean {
+        return throwable is java.net.UnknownHostException ||
+                throwable is java.net.SocketTimeoutException ||
+                throwable is java.io.IOException
+    }
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }

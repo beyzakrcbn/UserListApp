@@ -10,8 +10,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Web
+import androidx.compose.material.icons.filled.Settings  //Web iconu hata alıyordu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,15 +37,15 @@ fun UserListScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        // Header Card
+
         HeaderCard(userCount = uiState.users.size)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Content
+
         when {
             uiState.isLoading -> LoadingContent()
-            uiState.errorMessage != null -> ErrorContent(
+            !uiState.errorMessage.isNullOrEmpty() -> ErrorContent(
                 error = uiState.errorMessage,
                 onRetry = { viewModel.fetchUsers() },
                 onDismiss = { viewModel.clearError() }
@@ -56,13 +55,13 @@ fun UserListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Action Buttons
+
         ActionButtons(onRefresh = { viewModel.fetchUsers() })
     }
 }
 
 @Composable
-private fun HeaderCard(userCount: Int) {  //kullanıcı sayısı
+private fun HeaderCard(userCount: Int) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -99,7 +98,7 @@ private fun HeaderCard(userCount: Int) {  //kullanıcı sayısı
 }
 
 @Composable
-private fun LoadingContent() {  //yükleniyor durumu
+private fun LoadingContent() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -127,8 +126,8 @@ private fun LoadingContent() {  //yükleniyor durumu
 }
 
 @Composable
-private fun ErrorContent( //Dismiss, Retry
-    error: String,
+private fun ErrorContent(
+    error: String?, // nullable String yapıyoruz!!
     onRetry: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -156,7 +155,7 @@ private fun ErrorContent( //Dismiss, Retry
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = error,
+                text = error ?: "Unknown error", // null-safe operator
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer
             )
@@ -215,7 +214,7 @@ private fun UserListContent(users: List<User>) {
 }
 
 @Composable
-private fun UserItem(user: User) {  //Kullanıcı bilgileri
+private fun UserItem(user: User) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -226,7 +225,7 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Name
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -246,7 +245,7 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Email
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -268,7 +267,7 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Phone
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -288,14 +287,13 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Website
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Web,
-                    contentDescription = "Website",
-                    tint = MaterialTheme.colorScheme.primary,
+                Text(
+                    text = "🌐",
+                    fontSize = 16.sp,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -306,7 +304,7 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
                 )
             }
 
-            // Company info
+
             if (user.company.name.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Box(
@@ -338,7 +336,7 @@ private fun UserItem(user: User) {  //Kullanıcı bilgileri
 }
 
 @Composable
-private fun ActionButtons(onRefresh: () -> Unit) {    //refresh yeniler
+private fun ActionButtons(onRefresh: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
